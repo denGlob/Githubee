@@ -2,7 +2,6 @@ package com.denshiksmle.githubee.data.engines;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.plugins.RxJavaPlugins;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -25,10 +24,10 @@ public class RetrofitEngine {
     private Retrofit retrofit;
 
     public <T> T provideService(Class<T> clazz) {
-        return provideRetorfit().create(clazz);
+        return provideRetrofit().create(clazz);
     }
 
-    public Retrofit provideRetorfit() {
+    private Retrofit provideRetrofit() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
