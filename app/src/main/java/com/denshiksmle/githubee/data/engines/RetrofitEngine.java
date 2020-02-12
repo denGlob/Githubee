@@ -24,6 +24,10 @@ public class RetrofitEngine {
 
     private Retrofit retrofit;
 
+    public <T> T provideService(Class<T> clazz) {
+        return provideRetorfit().create(clazz);
+    }
+
     public Retrofit provideRetorfit() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
