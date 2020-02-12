@@ -18,11 +18,6 @@ public class UserRepositoryImpl implements UserRepository {
     private RetrofitEngine retrofitEngine;
 
     @Override
-    public Observable<List<User>> retrieveUsersStart() {
-        return retrieveUsersOffset(0);
-    }
-
-    @Override
     public Observable<List<User>> retrieveUsersOffset(int offset) {
         return retrofitEngine.provideService(Users.class)
                 .getUsers(offset)

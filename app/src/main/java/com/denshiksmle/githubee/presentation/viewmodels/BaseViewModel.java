@@ -11,13 +11,21 @@ import com.denshiksmle.githubee.presentation.entities.Event;
 
 public class BaseViewModel extends AndroidViewModel {
 
-    private LiveData<Event<Exception>> exceptions;
+    private LiveData<Event<String>> exceptionMessage;
 
     public BaseViewModel(@NonNull Application application) {
         super(application);
     }
 
     private void init() {
-        exceptions = new MediatorLiveData<>();
+        exceptionMessage = new MediatorLiveData<>();
+    }
+
+    protected void onProcessException(@NonNull final Throwable e) {
+
+    }
+
+    public LiveData<Event<String>> getExceptionMessage() {
+        return exceptionMessage;
     }
 }

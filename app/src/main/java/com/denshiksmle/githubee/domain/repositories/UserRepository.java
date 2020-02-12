@@ -11,8 +11,6 @@ import io.reactivex.Observable;
 
 public interface UserRepository {
 
-    Observable<List<User>> retrieveUsersStart();
-
     Observable<List<User>> retrieveUsersOffset(int offset);
 
     Observable<DetailUser> retrieveDetailUser(@NonNull String username);

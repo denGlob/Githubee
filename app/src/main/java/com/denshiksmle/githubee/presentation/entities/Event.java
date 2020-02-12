@@ -7,6 +7,10 @@ public class Event<T> {
     private boolean isHandled;
     private T content;
 
+    public Event(T content) {
+        this.content = content;
+    }
+
     @Nullable
     public T getHandleContent() {
         if (isHandled) {
