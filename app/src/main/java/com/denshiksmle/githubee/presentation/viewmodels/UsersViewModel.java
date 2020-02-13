@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.denshiksmle.githubee.domain.entities.User;
 import com.denshiksmle.githubee.domain.repositories.UserRepository;
 import com.denshiksmle.githubee.presentation.entities.Event;
+import com.denshiksmle.githubee.presentation.entities.Mappers;
+import com.denshiksmle.githubee.presentation.entities.UserItem;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class UsersViewModel extends BaseViewModel {
 
-    private MutableLiveData<Event<List<User>>> updateUsers;
+    private MutableLiveData<Event<List<UserItem>>> updateUsers;
 
     private UserRepository userRepository;
 
@@ -24,14 +26,14 @@ public class UsersViewModel extends BaseViewModel {
         super(application);
     }
 
-    public LiveData<Event<List<User>>> getFirstUsers() {
+    public LiveData<Event<List<UserItem>>> getFirstUsers() {
         return getUsers(0);
     }
 
-    public LiveData<Event<List<User>>> getUsers(final int offset) {
+    public LiveData<Event<List<UserItem>>> getUsers(final int offset) {
         initLiveData();
         userRepository.retrieveUsersOffset(offset)
-                .map(users -> new Event(users))
+                .map(users -> new Event(Mappers.fromUsers(users)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> updateUsers.setValue(result), error -> onProcessException(error));
         return updateUsers;
