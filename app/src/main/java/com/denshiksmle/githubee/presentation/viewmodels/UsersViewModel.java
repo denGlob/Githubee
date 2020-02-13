@@ -5,9 +5,12 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.denshiksmle.githubee.domain.entities.User;
 import com.denshiksmle.githubee.domain.repositories.UserRepository;
+import com.denshiksmle.githubee.presentation.adapters.UserListAdapter;
 import com.denshiksmle.githubee.presentation.entities.Event;
 import com.denshiksmle.githubee.presentation.entities.Mappers;
 import com.denshiksmle.githubee.presentation.entities.UserItem;
@@ -18,7 +21,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class UsersViewModel extends BaseViewModel {
 
+    private boolean isLoading;
+    private RecyclerView.OnScrollListener onScrollListener;
     private MutableLiveData<Event<List<UserItem>>> updateUsers;
+    private MutableLiveData<Event<Boolean>> clearUsers;
 
     private UserRepository userRepository;
 
@@ -26,22 +32,58 @@ public class UsersViewModel extends BaseViewModel {
         super(application);
     }
 
-    public LiveData<Event<List<UserItem>>> getFirstUsers() {
-        return getUsers(0);
-    }
-
-    public LiveData<Event<List<UserItem>>> getUsers(final int offset) {
-        initLiveData();
-        userRepository.retrieveUsersOffset(offset)
-                .map(users -> new Event(Mappers.fromUsers(users)))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> updateUsers.setValue(result), error -> onProcessException(error));
-        return updateUsers;
-    }
-
-    private void initLiveData() {
+    public LiveData<Event<List<UserItem>>> getUsers() {
         if (updateUsers == null) {
             updateUsers = new MutableLiveData<>();
         }
+        return updateUsers;
+    }
+
+    public LiveData<Event<Boolean>> getClearing() {
+        if (clearUsers == null) {
+            clearUsers = new MutableLiveData<>();
+        }
+        return clearUsers;
+    }
+
+    public void clearUsers() {
+        clearUsers.setValue(new Event<>(true));
+    }
+
+    public void requestUsers(final int offset) {
+        if (isLoading) {
+            return;
+        }
+        isLoading = true;
+        userRepository.retrieveUsersOffset(offset)
+                .map(users -> new Event(Mappers.fromUsers(users)))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    isLoading = false;
+                    updateUsers.setValue(result);
+                }, error -> {
+                    isLoading = false;
+                    onProcessException(error);
+                });
+    }
+
+    public RecyclerView.OnScrollListener getOnScrollListener() {
+        if (onScrollListener != null) {
+            return onScrollListener;
+        }
+        onScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (isLoading) {
+                    return;
+                }
+                LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                final int itemsCount = recyclerView.getAdapter().getItemCount() - 1;
+                if(itemsCount == llm.findFirstCompletelyVisibleItemPosition()) {
+                    requestUsers(itemsCount + 1);
+                }
+            }
+        };
+        return onScrollListener;
     }
 }

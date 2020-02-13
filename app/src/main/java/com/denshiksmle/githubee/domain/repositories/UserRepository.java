@@ -8,6 +8,7 @@ import com.denshiksmle.githubee.domain.entities.User;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public interface UserRepository {
 

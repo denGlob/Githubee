@@ -22,7 +22,18 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserIt
     private List<UserItem> userItems = new ArrayList<>();
 
     public void addItems(List<UserItem> userItems) {
+        if (this.userItems.size() == 0) {
+            this.userItems.addAll(userItems);
+            notifyDataSetChanged();
+            return;
+        }
+        final int positonStart  = this.userItems.size() + 1;
         this.userItems.addAll(userItems);
+        notifyItemRangeInserted(positonStart, userItems.size());
+    }
+
+    public void clear() {
+        userItems.clear();
         notifyDataSetChanged();
     }
 
