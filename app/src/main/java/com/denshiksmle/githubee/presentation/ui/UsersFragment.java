@@ -71,8 +71,8 @@ public class UsersFragment extends BaseFragment {
 
     private void navigate(final String selectedUserName) {
         final Bundle bundle = new Bundle();
-        bundle.putString("UserNameKey", selectedUserName);
-        NavHostFragment.findNavController(this).navigate(R.id.detailUserFragment);
+        bundle.putString("username", selectedUserName);
+        NavHostFragment.findNavController(this).navigate(R.id.detailUserFragment, bundle);
     }
 
     private void initViewModel() {
