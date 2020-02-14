@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.denshiksmle.githubee.data.repositories.UserRepositoryImpl;
 import com.denshiksmle.githubee.domain.repositories.UserRepository;
 import com.denshiksmle.githubee.presentation.entities.Event;
 import com.denshiksmle.githubee.presentation.entities.Mappers;
@@ -29,6 +30,7 @@ public class UsersViewModel extends BaseViewModel {
 
     public UsersViewModel(@NonNull Application application) {
         super(application);
+        this.userRepository = new UserRepositoryImpl();
     }
 
     public LiveData<Event<List<UserItem>>> getUsers() {
@@ -77,7 +79,7 @@ public class UsersViewModel extends BaseViewModel {
                     return;
                 }
                 LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                final int itemsCount = recyclerView.getAdapter().getItemCount() - 1;
+                final int itemsCount = recyclerView.getAdapter().getItemCount() - 10;
                 if(itemsCount == llm.findFirstCompletelyVisibleItemPosition()) {
                     requestUsers(itemsCount + 1);
                 }

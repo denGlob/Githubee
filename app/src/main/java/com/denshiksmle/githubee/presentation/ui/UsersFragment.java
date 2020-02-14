@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,12 +21,21 @@ import com.denshiksmle.githubee.R;
 import com.denshiksmle.githubee.presentation.adapters.UserListAdapter;
 import com.denshiksmle.githubee.presentation.viewmodels.UsersViewModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UsersFragment extends BaseFragment {
 
     private RecyclerView usersView;
     private SwipeRefreshLayout refreshLayout;
     private UsersViewModel usersViewModel;
     private UserListAdapter adapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new UserListAdapter(this::navigate);
+    }
 
     @Nullable
     @Override
@@ -36,7 +46,7 @@ public class UsersFragment extends BaseFragment {
         usersView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
 
-        adapter = new UserListAdapter(this::navigate);
+        initViewModel();
 
         refreshLayout.setOnRefreshListener(() -> {
             usersViewModel.clearUsers();
@@ -44,9 +54,11 @@ public class UsersFragment extends BaseFragment {
         });
 
         usersView.addOnScrollListener(usersViewModel.getOnScrollListener());
+        usersView.setAdapter(adapter);
 
-        initViewModel();
-        usersViewModel.requestUsers(0);
+        if (adapter.getItemCount() == 0) {
+            usersViewModel.requestUsers(0);
+        }
 
         return rootView;
     }
@@ -63,13 +75,14 @@ public class UsersFragment extends BaseFragment {
         NavHostFragment.findNavController(this).navigate(R.id.detailUserFragment);
     }
 
-    public void initViewModel() {
+    private void initViewModel() {
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.getUsers().observe(getViewLifecycleOwner(), usersEvent -> {
             if (usersEvent.isHandled()) {
                 return;
             }
             adapter.addItems(usersEvent.getHandleContent());
+            hideLoading();
         });
 
         usersViewModel.getClearing().observe(getViewLifecycleOwner(), clearingEvent -> {
@@ -85,5 +98,11 @@ public class UsersFragment extends BaseFragment {
             }
             showSnakbar(errorMsgEvent.getHandleContent());
         });
+    }
+
+    private void hideLoading() {
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(false);
+        }
     }
 }

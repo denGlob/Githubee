@@ -6,9 +6,17 @@
     <fragment
         android:id="@+id/usersFragment"
         android:name="com.denshiksmle.githubee.presentation.ui.UsersFragment"
-        android:label="Users" />
+        android:label="Users" >
+        <action
+            android:id="@+id/action_usersFragment_to_detailUserFragment"
+            app:destination="@id/detailUserFragment" />
+    </fragment>
     <fragment
         android:id="@+id/detailUserFragment"
         android:name="com.denshiksmle.githubee.presentation.ui.DetailUserFragment"
-        android:label="DetailUserFragment" />
+        android:label="DetailUserFragment" >
+<!--        <argument-->
+<!--            android:name="username"-->
+<!--            app:type="string" />-->
+    </fragment>
 </navigation>

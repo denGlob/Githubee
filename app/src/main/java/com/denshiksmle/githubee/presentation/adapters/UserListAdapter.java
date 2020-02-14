@@ -28,7 +28,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserIt
 
     public void addItems(List<UserItem> userItems) {
         if (this.userItems.size() == 0) {
-            this.userItems.addAll(userItems);
+            this.userItems = userItems;
             notifyDataSetChanged();
             return;
         }

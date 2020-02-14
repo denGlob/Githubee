@@ -42,7 +42,7 @@ public class DetailUserFragment extends BaseFragment {
 
         detailUserViewModel = new ViewModelProvider(this).get(DetailUserViewModel.class);
 
-        final String userName = getArguments().getString("UserNameKey", null);
+        final String userName = getArguments().getString("username", null);
         detailUserViewModel.loadUser(userName);
         detailUserViewModel.getUser().observe(getViewLifecycleOwner(), userEvent -> {
             if (userEvent.isHandled()) {

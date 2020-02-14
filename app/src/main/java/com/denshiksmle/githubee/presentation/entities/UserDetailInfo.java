@@ -37,7 +37,7 @@ public class UserDetailInfo {
     }
 
     public String getUserRepos() {
-        return "Repos: " + userRepos;
+        return String.valueOf(userRepos);
     }
 
     public void setUserRepos(int userRepos) {
@@ -45,7 +45,7 @@ public class UserDetailInfo {
     }
 
     public String getUserGists() {
-        return "Gists: " + userGists;
+        return String.valueOf(userGists);
     }
 
     public void setUserGists(int userGists) {
@@ -53,7 +53,7 @@ public class UserDetailInfo {
     }
 
     public String getFollowers() {
-        return "Followers: " + followers;
+        return String.valueOf(followers);
     }
 
     public void setFollowers(int followers) {

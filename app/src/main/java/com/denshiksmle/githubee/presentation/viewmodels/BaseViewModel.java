@@ -15,6 +15,7 @@ public class BaseViewModel extends AndroidViewModel {
 
     public BaseViewModel(@NonNull Application application) {
         super(application);
+        init();
     }
 
     private void init() {
