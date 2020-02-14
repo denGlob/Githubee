@@ -51,6 +51,13 @@ public class DetailUserFragment extends BaseFragment {
             showUser(userEvent.getHandleContent());
         });
 
+        detailUserViewModel.getExceptionMessage().observe(getViewLifecycleOwner(), errorMsgEvent -> {
+            if (errorMsgEvent.isHandled()) {
+                return;
+            }
+            showSnakbar(errorMsgEvent.getHandleContent());
+        });
+
         return rootView;
     }
 
