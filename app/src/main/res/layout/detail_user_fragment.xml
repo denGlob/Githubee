@@ -30,6 +30,7 @@
         android:layout_gravity="center"
         android:textColor="@color/colorLightGray"
         android:linksClickable="true"
+        android:autoLink="web"
         tools:text="www.lacarajones.com"/>
 
     <LinearLayout
