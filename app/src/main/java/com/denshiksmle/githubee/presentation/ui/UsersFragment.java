@@ -42,6 +42,7 @@ public class UsersFragment extends BaseFragment {
         usersView.addOnScrollListener(usersViewModel.getOnScrollListener());
 
         initViewModel();
+        usersViewModel.requestUsers(0);
 
         return rootView;
     }
@@ -68,8 +69,11 @@ public class UsersFragment extends BaseFragment {
             adapter.clear();
         });
 
-        usersViewModel.getExceptionMessage().observe(getViewLifecycleOwner(), errorMsg -> {
-
+        usersViewModel.getExceptionMessage().observe(getViewLifecycleOwner(), errorMsgEvent -> {
+            if (errorMsgEvent.isHandled()) {
+                return;
+            }
+            showSnakbar(errorMsgEvent.getHandleContent());
         });
     }
 }

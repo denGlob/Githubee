@@ -8,9 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.denshiksmle.githubee.domain.entities.User;
 import com.denshiksmle.githubee.domain.repositories.UserRepository;
-import com.denshiksmle.githubee.presentation.adapters.UserListAdapter;
 import com.denshiksmle.githubee.presentation.entities.Event;
 import com.denshiksmle.githubee.presentation.entities.Mappers;
 import com.denshiksmle.githubee.presentation.entities.UserItem;
@@ -18,6 +16,7 @@ import com.denshiksmle.githubee.presentation.entities.UserItem;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class UsersViewModel extends BaseViewModel {
 
@@ -55,7 +54,7 @@ public class UsersViewModel extends BaseViewModel {
             return;
         }
         isLoading = true;
-        userRepository.retrieveUsersOffset(offset)
+        Disposable disposable = userRepository.retrieveUsersOffset(offset)
                 .map(users -> new Event(Mappers.fromUsers(users)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

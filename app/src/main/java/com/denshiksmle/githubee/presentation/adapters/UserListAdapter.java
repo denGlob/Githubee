@@ -54,7 +54,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserIt
         return userItems.size();
     }
 
-    class UserItemHolder extends RecyclerView.ViewHolder {
+    static class UserItemHolder extends RecyclerView.ViewHolder {
 
         ImageView avatar;
         TextView userName;

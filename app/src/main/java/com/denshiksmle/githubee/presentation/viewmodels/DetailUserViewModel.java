@@ -16,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class DetailUserViewModel extends BaseViewModel {
 
+    private boolean isLoading;
     private MutableLiveData<Event<UserDetailInfo>> detailUserData;
     private UserRepository userRepository;
 
@@ -23,18 +24,24 @@ public class DetailUserViewModel extends BaseViewModel {
         super(application);
     }
 
-    public LiveData<Event<UserDetailInfo>> getUser(@NonNull final String userName) {
-        initLiveData();
+    public void loadUser(final String userName) {
+        isLoading = true;
         userRepository.retrieveDetailUser(userName)
                 .map(user -> new Event(Mappers.fromDetailUser(user)))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> detailUserData.setValue(event), error -> onProcessException(error));
-        return detailUserData;
+                .subscribe(event -> {
+                    isLoading = false;
+                    detailUserData.setValue(event);
+                }, error -> {
+                    isLoading = false;
+                    onProcessException(error);
+                });
     }
 
-    private void initLiveData() {
+    public LiveData<Event<UserDetailInfo>> getUser() {
         if (detailUserData == null) {
             detailUserData = new MutableLiveData<>();
         }
+        return detailUserData;
     }
 }
