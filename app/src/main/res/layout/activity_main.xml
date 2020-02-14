@@ -23,10 +23,11 @@
             android:animateLayoutChanges="true"
             android:background="@color/colorPrimary"
             android:minHeight="56dp"
-            app:titleMarginEnd="88dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_collapseMode="pin"
-            app:title=" ">
+            app:title=" "
+            app:titleMarginEnd="88dp"
+            app:titleTextColor="@android:color/white">
 
         </androidx.appcompat.widget.Toolbar>
 
