@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavHostController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -32,7 +36,7 @@ public class UsersFragment extends BaseFragment {
         usersView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
 
-        adapter = new UserListAdapter();
+        adapter = new UserListAdapter(this::navigate);
 
         refreshLayout.setOnRefreshListener(() -> {
             usersViewModel.clearUsers();
@@ -51,6 +55,12 @@ public class UsersFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         usersView.removeOnScrollListener(usersViewModel.getOnScrollListener());
+    }
+
+    private void navigate(final String selectedUserName) {
+        final Bundle bundle = new Bundle();
+        bundle.putString("UserNameKey", selectedUserName);
+        NavHostFragment.findNavController(this).navigate(R.id.detailUserFragment);
     }
 
     public void initViewModel() {

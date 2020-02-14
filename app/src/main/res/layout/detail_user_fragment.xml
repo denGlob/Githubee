@@ -29,6 +29,7 @@
         android:layout_marginTop="8dp"
         android:layout_gravity="center"
         android:textColor="@color/colorLightGray"
+        android:linksClickable="true"
         tools:text="www.lacarajones.com"/>
 
     <LinearLayout

@@ -20,6 +20,11 @@ import java.util.List;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserItemHolder> {
 
     private List<UserItem> userItems = new ArrayList<>();
+    private OnUserClickListener onUserClickListener;
+
+    public UserListAdapter(OnUserClickListener onUserClickListener) {
+        this.onUserClickListener = onUserClickListener;
+    }
 
     public void addItems(List<UserItem> userItems) {
         if (this.userItems.size() == 0) {
@@ -41,7 +46,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserIt
     @Override
     public UserItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
-        return new UserItemHolder(row);
+        return new UserItemHolder(row, onUserClickListener);
     }
 
     @Override
@@ -54,16 +59,21 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserIt
         return userItems.size();
     }
 
-    static class UserItemHolder extends RecyclerView.ViewHolder {
+    static class UserItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        OnUserClickListener onUserClickListener;
         ImageView avatar;
         TextView userName;
 
-        UserItemHolder(@NonNull View itemView) {
+        UserItemHolder(@NonNull View itemView,
+                       @NonNull OnUserClickListener onUserClickListener) {
             super(itemView);
 
             avatar = itemView.findViewById(R.id.avatar);
             userName = itemView.findViewById(R.id.userName);
+            this.onUserClickListener = onUserClickListener;
+
+            itemView.setOnClickListener(this);
         }
 
         void bind(UserItem userItem) {
@@ -74,5 +84,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserIt
 
             userName.setText(userItem.getUserName());
         }
+
+        @Override
+        public void onClick(View v) {
+            onUserClickListener.onUserClick(userName.getText().toString());
+        }
+    }
+
+    public interface OnUserClickListener {
+        void onUserClick(@NonNull final String userName);
     }
 }
